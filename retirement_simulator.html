@@ -226,6 +226,88 @@
         .hidden {
             display: none;
         }
+
+        .projection-table-container {
+            margin-top: 30px;
+        }
+
+        .projection-table-container h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+        }
+
+        #projectionTable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        #projectionTable th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        #projectionTable td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        #projectionTable td:first-child,
+        #projectionTable td:nth-child(2),
+        #projectionTable td:nth-child(3) {
+            text-align: center;
+        }
+
+        #projectionTable tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        #projectionTable tbody tr:hover {
+            background-color: #edf2f7;
+        }
+
+        .status-working {
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .status-retired {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+
+        .status-depleted {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            #projectionTable {
+                font-size: 0.8em;
+            }
+
+            #projectionTable th,
+            #projectionTable td {
+                padding: 8px 4px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -400,6 +482,30 @@
             <div class="chart-container">
                 <canvas id="portfolioChart"></canvas>
             </div>
+
+            <div class="projection-table-container">
+                <h3>Year-by-Year Projection</h3>
+                <div class="table-wrapper">
+                    <table id="projectionTable">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Age</th>
+                                <th>Status</th>
+                                <th>Salary</th>
+                                <th>Contributions</th>
+                                <th>Withdrawal</th>
+                                <th>Investment Gain</th>
+                                <th>End Balance</th>
+                                <th>Real Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <div class="footer">
@@ -488,6 +594,9 @@
             
             // Create chart
             createChart(projections);
+
+            // Create projection table
+            createProjectionTable(projections);
         }
 
         function createChart(projections) {
@@ -555,6 +664,48 @@
                         }
                     }
                 }
+            });
+        }
+
+        function createProjectionTable(projections) {
+            const tableBody = document.querySelector('#projectionTable tbody');
+
+            // Clear existing rows
+            tableBody.innerHTML = '';
+
+            // Populate table with projection data
+            projections.forEach(projection => {
+                const row = document.createElement('tr');
+
+                // Determine status and apply appropriate class
+                let status, statusClass;
+                if (projection.depleted) {
+                    status = 'Depleted';
+                    statusClass = 'status-depleted';
+                } else if (projection.isWorking) {
+                    status = 'Working';
+                    statusClass = 'status-working';
+                } else {
+                    status = 'Retired';
+                    statusClass = 'status-retired';
+                }
+
+                // Calculate investment gain for display
+                const investmentGain = projection.startBalance * projection.investmentReturn;
+
+                row.innerHTML = `
+                    <td>${projection.year}</td>
+                    <td>${projection.age}</td>
+                    <td class="${statusClass}">${status}</td>
+                    <td>${projection.salary > 0 ? formatCurrency(projection.salary) : '-'}</td>
+                    <td>${projection.contributions > 0 ? formatCurrency(projection.contributions) : '-'}</td>
+                    <td>${projection.withdrawal > 0 ? formatCurrency(projection.withdrawal) : '-'}</td>
+                    <td>${formatCurrency(investmentGain)}</td>
+                    <td>${formatCurrency(projection.endBalance)}</td>
+                    <td>${formatCurrency(projection.endBalanceReal)}</td>
+                `;
+
+                tableBody.appendChild(row);
             });
         }
 

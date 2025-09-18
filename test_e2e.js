@@ -117,7 +117,28 @@ async function runE2ETests() {
             console.log(`  ${chartCreated ? '✅' : '❌'} Chart.js chart object created`);
         }
 
-        // Test 5: Responsive design - removed for now
+        // Test 5: Projection table
+        console.log('\nTest 5: Projection Table');
+
+        const tableExists = await page.$('#projectionTable') !== null;
+        console.log(`  ${tableExists ? '✅' : '❌'} Projection table exists`);
+
+        if (tableExists) {
+            const tableRowCount = await page.evaluate(() => {
+                return document.querySelectorAll('#projectionTable tbody tr').length;
+            });
+            console.log(`  ${tableRowCount > 0 ? '✅' : '❌'} Table has ${tableRowCount} data rows`);
+
+            const hasWorkingStatus = await page.evaluate(() => {
+                return document.querySelector('.status-working') !== null;
+            });
+            console.log(`  ${hasWorkingStatus ? '✅' : '❌'} Table shows working status`);
+
+            const hasRetiredStatus = await page.evaluate(() => {
+                return document.querySelector('.status-retired') !== null;
+            });
+            console.log(`  ${hasRetiredStatus ? '✅' : '❌'} Table shows retired status`);
+        }
 
         // Test 6: Form validation
         console.log('\nTest 6: Form Validation');
