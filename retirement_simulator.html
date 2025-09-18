@@ -492,9 +492,9 @@
 
         function createChart(projections) {
             const ctx = document.getElementById('portfolioChart').getContext('2d');
-            
+
             // Destroy existing chart if it exists
-            if (window.portfolioChart) {
+            if (window.portfolioChart && typeof window.portfolioChart.destroy === 'function') {
                 window.portfolioChart.destroy();
             }
             
