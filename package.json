@@ -1,0 +1,17 @@
+{
+  "name": "retirement-calculator",
+  "version": "1.0.0",
+  "description": "A retirement planning calculator with browser-based interface and testing",
+  "main": "retirement_simulator.html",
+  "scripts": {
+    "test": "node test_calculator.js",
+    "test:e2e": "node test_e2e.js",
+    "test:all": "npm run test && npm run test:e2e"
+  },
+  "devDependencies": {
+    "puppeteer": "^21.0.0"
+  },
+  "keywords": ["retirement", "calculator", "finance", "planning"],
+  "author": "",
+  "license": "MIT"
+}
