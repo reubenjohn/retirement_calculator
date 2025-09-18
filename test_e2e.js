@@ -6,6 +6,9 @@ async function runE2ETests() {
     console.log('🌐 Running End-to-End Browser Tests\n');
 
     let browser;
+    let consoleErrors = [];
+    let pageErrors = [];
+
     try {
         // Launch browser
         const puppeteer = require('puppeteer');
@@ -16,16 +19,28 @@ async function runE2ETests() {
 
         const page = await browser.newPage();
 
-        // Load the HTML file
-        const htmlPath = path.resolve(__dirname, 'retirement_simulator.html');
-        const htmlContent = fs.readFileSync(htmlPath, 'utf8');
+        // Monitor console errors
+        page.on('console', msg => {
+            if (msg.type() === 'error') {
+                const error = `Console error: ${msg.text()}`;
+                consoleErrors.push(error);
+                console.log(`  ❌ ${error}`);
+            }
+        });
 
-        await page.setContent(htmlContent);
+        // Monitor page errors (JavaScript exceptions)
+        page.on('pageerror', error => {
+            const errorMsg = `Page error: ${error.message}`;
+            pageErrors.push(errorMsg);
+            console.log(`  ❌ ${errorMsg}`);
+        });
+
+        // Load the HTML file directly (this preserves relative script paths)
+        const htmlPath = path.resolve(__dirname, 'retirement_simulator.html');
+        await page.goto(`file://${htmlPath}`);
 
         // Wait for page to load completely
-        await page.waitForSelector('#calculateBtn', { timeout: 5000 }).catch(() => {
-            // Button might have different ID, let's check what we have
-        });
+        await page.waitForSelector('.calculate-btn', { timeout: 5000 });
 
         console.log('✅ Page loaded successfully');
 
@@ -125,7 +140,23 @@ async function runE2ETests() {
 
         console.log(`  ${validationWorked ? '✅' : '❌'} Form handles edge cases`);
 
-        console.log('\n🎉 All E2E tests completed successfully!');
+        // Report any errors found during testing
+        console.log('\n📋 Error Summary:');
+        if (consoleErrors.length === 0 && pageErrors.length === 0) {
+            console.log('  ✅ No console or page errors detected');
+        } else {
+            if (consoleErrors.length > 0) {
+                console.log(`  ❌ Found ${consoleErrors.length} console error(s):`);
+                consoleErrors.forEach((error, i) => console.log(`    ${i + 1}. ${error}`));
+            }
+            if (pageErrors.length > 0) {
+                console.log(`  ❌ Found ${pageErrors.length} page error(s):`);
+                pageErrors.forEach((error, i) => console.log(`    ${i + 1}. ${error}`));
+            }
+        }
+
+        const hasErrors = consoleErrors.length > 0 || pageErrors.length > 0;
+        console.log(`\n${hasErrors ? '⚠️' : '🎉'} All E2E tests completed ${hasErrors ? 'with errors detected' : 'successfully'}!`);
 
     } catch (error) {
         console.error('❌ E2E Test failed:', error.message);
