@@ -4,10 +4,10 @@
   "description": "A retirement planning calculator with browser-based interface and testing",
   "main": "retirement_simulator.html",
   "scripts": {
-    "test": "jest calculator.test.js",
+    "test:calculator": "jest calculator.test.js",
     "test:accounts": "jest accounts.test.js",
     "test:e2e": "node test_e2e.js",
-    "test:all": "npm run test && npm run test:accounts && npm run test:e2e"
+    "test:all": "npm run test:calculator && npm run test:accounts && npm run test:e2e"
   },
   "devDependencies": {
     "jest": "^30.1.3",

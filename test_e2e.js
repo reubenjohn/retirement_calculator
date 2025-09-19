@@ -12,9 +12,19 @@ async function runE2ETests() {
     try {
         // Launch browser
         const puppeteer = require('puppeteer');
+        const isCI = process.env.CI === 'true';
         browser = await puppeteer.launch({
             headless: 'new',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage', // Overcome limited resource problems
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-renderer-backgrounding',
+                ...(isCI ? ['--single-process'] : [])
+            ]
         });
 
         const page = await browser.newPage();
