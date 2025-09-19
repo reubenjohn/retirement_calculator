@@ -12,8 +12,30 @@ document.querySelectorAll('.scenario-btn').forEach(btn => {
         const scenario = scenarios[this.dataset.scenario];
         document.getElementById('investmentReturn').value = scenario.return;
         document.getElementById('inflation').value = scenario.inflation;
+
+        calculateRetirement();
     });
 });
+
+// Add automatic recalculation for all input fields
+function setupAutoRecalculation() {
+    const inputFields = [
+        'currentAge', 'retirementAge', 'lifeExpectancy',
+        'baseSalary', 'bonus', 'salaryGrowth',
+        'taxableBalance', 'traditional401k', 'rothBalance', 'hsaBalance', 'cashBalance',
+        'taxableContrib', 'employee401k', 'employer401k', 'rothContrib', 'hsaEmployee', 'hsaEmployer',
+        'investmentReturn', 'inflation',
+        'baseWithdrawal', 'indexWithdrawals'
+    ];
+
+    inputFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) {
+            element.addEventListener('input', calculateRetirement);
+            element.addEventListener('change', calculateRetirement);
+        }
+    });
+}
 
 // Main calculation function - now uses shared module
 function calculateRetirement() {
@@ -204,7 +226,8 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-// Initialize with default calculation
+// Initialize with default calculation and setup auto-recalculation
 document.addEventListener('DOMContentLoaded', function() {
+    setupAutoRecalculation();
     calculateRetirement();
 });

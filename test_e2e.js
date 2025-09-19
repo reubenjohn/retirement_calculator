@@ -40,7 +40,7 @@ async function runE2ETests() {
         await page.goto(`file://${htmlPath}`);
 
         // Wait for page to load completely
-        await page.waitForSelector('.calculate-btn', { timeout: 5000 });
+        await page.waitForSelector('#currentAge', { timeout: 5000 });
 
         console.log('✅ Page loaded successfully');
 
@@ -72,19 +72,19 @@ async function runE2ETests() {
 
         console.log(`  ✅ Aggressive scenario - Return: ${aggressiveReturn}%, Inflation: ${aggressiveInflation}%`);
 
-        // Test 3: Form input and calculation
-        console.log('\nTest 3: Form Input & Calculation');
+        // Test 3: Form input and automatic calculation
+        console.log('\nTest 3: Form Input & Auto-Calculation');
 
-        // Set specific test values
-        await page.$eval('#currentAge', el => el.value = '25');
-        await page.$eval('#retirementAge', el => el.value = '65');
-        await page.$eval('#baseSalary', el => el.value = '100000');
-        await page.$eval('#taxableBalance', el => el.value = '25000');
+        // Set specific test values - this should trigger automatic recalculation
+        await page.$eval('#currentAge', el => { el.value = '25'; el.dispatchEvent(new Event('input')); });
+        await page.$eval('#retirementAge', el => { el.value = '65'; el.dispatchEvent(new Event('input')); });
+        await page.$eval('#baseSalary', el => { el.value = '100000'; el.dispatchEvent(new Event('input')); });
+        await page.$eval('#taxableBalance', el => { el.value = '25000'; el.dispatchEvent(new Event('input')); });
 
-        // Click calculate button
-        await page.click('.calculate-btn');
+        // Wait for automatic calculation to complete
+        await page.waitForTimeout(1000);
 
-        // Wait for results to appear
+        // Wait for results to appear (they should already be visible from page load)
         await page.waitForFunction(() => {
             const results = document.getElementById('results');
             return results && !results.classList.contains('hidden');
@@ -144,11 +144,9 @@ async function runE2ETests() {
         console.log('\nTest 6: Form Validation');
 
 
-        // Test with invalid age
-        await page.$eval('#currentAge', el => el.value = '150');
-        await page.$eval('#retirementAge', el => el.value = '140');
-
-        await page.click('.calculate-btn');
+        // Test with invalid age - should trigger automatic recalculation
+        await page.$eval('#currentAge', el => { el.value = '150'; el.dispatchEvent(new Event('input')); });
+        await page.$eval('#retirementAge', el => { el.value = '140'; el.dispatchEvent(new Event('input')); });
 
         // The calculation should handle edge cases gracefully
         await page.waitForTimeout(1000);
@@ -187,7 +185,7 @@ async function runE2ETests() {
         console.log('1. Open retirement_simulator.html in a web browser');
         console.log('2. Verify default values are loaded in all form fields');
         console.log('3. Click different scenario buttons and check if values update');
-        console.log('4. Change some input values and click "Calculate Retirement Plan"');
+        console.log('4. Change some input values and verify automatic recalculation');
         console.log('5. Verify that results appear and chart is displayed');
         console.log('6. Test on mobile by resizing browser window');
 
@@ -221,7 +219,7 @@ function runSimplifiedValidation() {
     // Check for required elements
     const requiredElements = [
         '#currentAge', '#retirementAge', '#baseSalary', '#investmentReturn',
-        '#retirementBalance', '#portfolioChart', '.calculate-btn'
+        '#retirementBalance', '#portfolioChart'
     ];
 
     const allElementsPresent = requiredElements.every(selector => {
