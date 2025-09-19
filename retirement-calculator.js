@@ -4,37 +4,14 @@
 (function (global) {
     'use strict';
 
-    // Load configuration
+    // Load configuration from global object (set by config.js in browser)
     let config = {};
-
-    // Try to load config in Node.js environment synchronously
-    if (typeof module !== 'undefined' && module.exports) {
-        try {
-            const fs = require('fs');
-            const path = require('path');
-            const configPath = path.join(__dirname, 'config.json');
-            if (fs.existsSync(configPath)) {
-                config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-            }
-        } catch (err) {
-            console.warn('Could not load config.json, using defaults');
-        }
-    }
-    // In browser environment, check for global config object
-    else if (typeof window !== 'undefined' && window.RetirementConfig) {
+    if (typeof window !== 'undefined' && window.RetirementConfig) {
         config = window.RetirementConfig;
     }
 
-    // Default scenarios and configuration
-    const defaultScenarios = {
-        conservative: { return: 4.0, inflation: 2.0 },
-        moderate: { return: 6.0, inflation: 2.5 },
-        aggressive: { return: 8.0, inflation: 3.0 },
-        custom: { return: 5.5, inflation: 2.3 }
-    };
-
-    // Use loaded config or fallback to defaults
-    const scenarios = config.scenarios || defaultScenarios;
+    // Use scenarios from loaded config
+    const scenarios = config.scenarios || {};
 
     // Main calculation function
     function calculateRetirement(params) {
