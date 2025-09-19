@@ -244,6 +244,13 @@ document.addEventListener('DOMContentLoaded', function () {
         populateDefaults(defaults);
     }
 
+    // Apply default scenario if available
+    const defaultScenario = scenarios.default;
+    if (defaultScenario) {
+        document.getElementById('investmentReturn').value = defaultScenario.return;
+        document.getElementById('inflation').value = defaultScenario.inflation;
+    }
+
     setupAutoRecalculation();
     calculateRetirement();
 });

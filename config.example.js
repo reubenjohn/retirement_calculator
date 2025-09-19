@@ -4,6 +4,10 @@
 
 window.RetirementConfig = {
   scenarios: {
+    default: {
+      return: 6.0,
+      inflation: 2.5
+    },
     conservative: {
       return: 4.0,
       inflation: 2.0
