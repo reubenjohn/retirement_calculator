@@ -4,15 +4,21 @@
   "description": "A retirement planning calculator with browser-based interface and testing",
   "main": "retirement_simulator.html",
   "scripts": {
-    "test": "node test_calculator.js",
-    "test:accounts": "node test_accounts.js",
+    "test": "jest calculator.test.js",
+    "test:accounts": "jest accounts.test.js",
     "test:e2e": "node test_e2e.js",
     "test:all": "npm run test && npm run test:accounts && npm run test:e2e"
   },
   "devDependencies": {
+    "jest": "^30.1.3",
     "puppeteer": "^21.0.0"
   },
-  "keywords": ["retirement", "calculator", "finance", "planning"],
+  "keywords": [
+    "retirement",
+    "calculator",
+    "finance",
+    "planning"
+  ],
   "author": "",
   "license": "MIT"
 }
