@@ -39,8 +39,8 @@
         return Object.values(accounts).reduce((sum, account) => sum + account.balance, 0);
     }
 
-    function getTotalContributions(accounts) {
-        return Object.values(accounts).reduce((sum, account) => sum + account.contributions, 0);
+    function getTotalContributions(accounts, contributionGrowthMultiplier = 1) {
+        return Object.values(accounts).reduce((sum, account) => sum + (account.contributions * contributionGrowthMultiplier), 0);
     }
 
     function calculateTaxOnWithdrawal(accountType, withdrawalAmount, taxSettings) {
@@ -110,7 +110,7 @@
         };
     }
 
-    function growAccounts(accounts, investmentReturn, isWorking, taxSettings) {
+    function growAccounts(accounts, investmentReturn, isWorking, taxSettings, contributionGrowthMultiplier = 1) {
         Object.values(accounts).forEach((account) => {
             // Apply different growth rates based on tax treatment
             let effectiveReturn = investmentReturn;
@@ -123,9 +123,9 @@
             // Growth
             account.balance *= (1 + effectiveReturn);
 
-            // Add contributions during working years
+            // Add contributions during working years with growth applied
             if (isWorking) {
-                account.balance += account.contributions;
+                account.balance += account.contributions * contributionGrowthMultiplier;
             }
         });
     }

@@ -47,7 +47,8 @@
             taxDragRate,
             capitalGainsRate,
             ordinaryIncomeRate,
-            taxableGainsRatio
+            taxableGainsRatio,
+            contributionGrowth
         } = params;
 
         // Use tax settings from params or fall back to config defaults
@@ -87,8 +88,9 @@
                 withdrawalResult = AccountManager.executeWithdrawalStrategy(targetWithdrawal, accounts, effectiveTaxSettings);
             }
 
-            // Apply investment growth and contributions
-            AccountManager.growAccounts(accounts, investmentReturn, isWorking, effectiveTaxSettings);
+            // Apply investment growth and contributions with growth
+            const contributionGrowthMultiplier = Math.pow(1 + (contributionGrowth || 0), yearOffset);
+            AccountManager.growAccounts(accounts, investmentReturn, isWorking, effectiveTaxSettings, contributionGrowthMultiplier);
 
             // Get ending balances
             const endBalance = AccountManager.getTotalBalance(accounts);
@@ -106,7 +108,7 @@
                 salary,
                 bonus: yearlyBonus,
                 totalIncome,
-                contributions: AccountManager.getTotalContributions(accounts),
+                contributions: isWorking ? AccountManager.getTotalContributions(accounts, contributionGrowthMultiplier) : 0,
                 priceIndex,
                 withdrawal: withdrawalResult.totalWithdrawn,
                 withdrawals: withdrawalResult.withdrawals,

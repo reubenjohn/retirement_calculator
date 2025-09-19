@@ -23,7 +23,7 @@ function setupAutoRecalculation() {
         'currentAge', 'retirementAge', 'lifeExpectancy',
         'baseSalary', 'bonus', 'salaryGrowth',
         'taxableBalance', 'traditional401k', 'rothBalance', 'hsaBalance', 'cashBalance',
-        'taxableContrib', 'employee401k', 'employer401k', 'rothContrib', 'hsaEmployee', 'hsaEmployer',
+        'taxableContrib', 'employee401k', 'employer401k', 'rothContrib', 'hsaEmployee', 'hsaEmployer', 'contributionGrowth',
         'investmentReturn', 'inflation',
         'taxDragRate', 'capitalGainsRate', 'ordinaryIncomeRate', 'taxableGainsRatio',
         'baseWithdrawal', 'indexWithdrawals'
@@ -63,6 +63,7 @@ function calculateRetirement() {
         rothContrib: document.getElementById('rothContrib').value,
         hsaEmployee: document.getElementById('hsaEmployee').value,
         hsaEmployer: document.getElementById('hsaEmployer').value,
+        contributionGrowth: parseFloat(document.getElementById('contributionGrowth').value) / 100,
 
         investmentReturn: parseFloat(document.getElementById('investmentReturn').value) / 100,
         inflation: parseFloat(document.getElementById('inflation').value) / 100,
