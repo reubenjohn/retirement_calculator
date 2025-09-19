@@ -20,7 +20,11 @@
         <div class="main-content">
             <!-- Personal Information Panel -->
             <div class="panel">
-                <h2>Personal Information</h2>
+                <h2 class="panel-header" onclick="togglePanel(this)">
+                    <span class="panel-title">Personal Information</span>
+                    <span class="panel-toggle">−</span>
+                </h2>
+                <div class="panel-content">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="currentAge">Current Age</label>
@@ -35,11 +39,16 @@
                     <label for="lifeExpectancy">Life Expectancy</label>
                     <input type="number" id="lifeExpectancy" value="90" min="70" max="110">
                 </div>
+                </div>
             </div>
 
             <!-- Income Panel -->
             <div class="panel">
-                <h2>Income Information</h2>
+                <h2 class="panel-header" onclick="togglePanel(this)">
+                    <span class="panel-title">Income Information</span>
+                    <span class="panel-toggle">−</span>
+                </h2>
+                <div class="panel-content">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="baseSalary">Base Salary ($)</label>
@@ -54,11 +63,16 @@
                     <label for="salaryGrowth">Annual Salary Growth (%)</label>
                     <input type="number" id="salaryGrowth" value="3" min="0" max="10" step="0.1">
                 </div>
+                </div>
             </div>
 
             <!-- Starting Balances Panel -->
             <div class="panel">
-                <h2>Starting Portfolio Balances</h2>
+                <h2 class="panel-header" onclick="togglePanel(this)">
+                    <span class="panel-title">Starting Portfolio Balances</span>
+                    <span class="panel-toggle">−</span>
+                </h2>
+                <div class="panel-content">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="taxableBalance">Taxable Account ($)</label>
@@ -83,11 +97,16 @@
                     <label for="cashBalance">Cash (treated as invested) ($)</label>
                     <input type="number" id="cashBalance" value="20000" min="0" step="1000">
                 </div>
+                </div>
             </div>
 
             <!-- Annual Contributions Panel -->
             <div class="panel">
-                <h2>Annual Contributions (While Working)</h2>
+                <h2 class="panel-header" onclick="togglePanel(this)">
+                    <span class="panel-title">Annual Contributions (While Working)</span>
+                    <span class="panel-toggle">−</span>
+                </h2>
+                <div class="panel-content">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="taxableContrib">Taxable Contribution ($)</label>
@@ -118,11 +137,16 @@
                         <input type="number" id="hsaEmployer" value="1000" min="0" step="500">
                     </div>
                 </div>
+                </div>
             </div>
 
             <!-- Investment Scenario Panel -->
             <div class="panel">
-                <h2>Investment Scenario</h2>
+                <h2 class="panel-header" onclick="togglePanel(this)">
+                    <span class="panel-title">Investment Scenario</span>
+                    <span class="panel-toggle">−</span>
+                </h2>
+                <div class="panel-content">
                 <div class="scenario-buttons">
                     <button class="scenario-btn" data-scenario="conservative">Conservative</button>
                     <button class="scenario-btn" data-scenario="moderate">Moderate</button>
@@ -139,11 +163,16 @@
                         <input type="number" id="inflation" value="2" min="0" max="10" step="0.1">
                     </div>
                 </div>
+                </div>
             </div>
 
             <!-- Tax Settings Panel -->
             <div class="panel">
-                <h2>Tax Settings</h2>
+                <h2 class="panel-header" onclick="togglePanel(this)">
+                    <span class="panel-title">Tax Settings</span>
+                    <span class="panel-toggle">−</span>
+                </h2>
+                <div class="panel-content">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="taxDragRate">Tax Drag Rate (%)</label>
@@ -168,11 +197,16 @@
                         <small>Percentage of taxable balance that is gains</small>
                     </div>
                 </div>
+                </div>
             </div>
 
             <!-- Retirement Withdrawal Panel -->
             <div class="panel">
-                <h2>Retirement Withdrawal</h2>
+                <h2 class="panel-header" onclick="togglePanel(this)">
+                    <span class="panel-title">Retirement Withdrawal</span>
+                    <span class="panel-toggle">−</span>
+                </h2>
+                <div class="panel-content">
                 <div class="form-group">
                     <label for="baseWithdrawal">Base Annual Withdrawal (today's $)</label>
                     <input type="number" id="baseWithdrawal" value="60000" min="0" step="1000">
@@ -183,6 +217,7 @@
                         <option value="yes">Yes</option>
                         <option value="no">No</option>
                     </select>
+                </div>
                 </div>
             </div>
         </div>

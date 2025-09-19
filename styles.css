@@ -63,6 +63,35 @@ body {
     font-size: 1.3em;
 }
 
+.panel-header {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+    padding: 10px 0;
+    user-select: none;
+}
+
+.panel-header:hover {
+    background-color: #f8fafc;
+    border-radius: 6px;
+    padding: 10px;
+    margin: -10px;
+}
+
+.panel-toggle {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #667eea;
+    transition: transform 0.2s ease;
+}
+
+.panel-content {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
 .form-group {
     margin-bottom: 15px;
 }
