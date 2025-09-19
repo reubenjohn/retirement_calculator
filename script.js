@@ -230,18 +230,18 @@ function formatCurrency(amount) {
 function populateDefaults(defaults) {
     Object.keys(defaults).forEach(key => {
         const element = document.getElementById(key);
-        if (element && !element.value) {
+        if (element) {
             element.value = defaults[key];
         }
     });
 }
 
 // Initialize with default calculation and setup auto-recalculation
-document.addEventListener('DOMContentLoaded', async function() {
-    // Try to load configuration first
-    const config = await RetirementCalculator.loadConfig();
-    if (config && config.defaults) {
-        populateDefaults(config.defaults);
+document.addEventListener('DOMContentLoaded', function() {
+    // Get defaults from the calculator module
+    const defaults = RetirementCalculator.getDefaults();
+    if (defaults && Object.keys(defaults).length > 0) {
+        populateDefaults(defaults);
     }
 
     setupAutoRecalculation();

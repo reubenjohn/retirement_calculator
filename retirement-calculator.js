@@ -1,13 +1,13 @@
 // Universal Retirement Calculator Module
 // Works in both Node.js and browser environments
 
-(function(global) {
+(function (global) {
     'use strict';
 
     // Load configuration
     let config = {};
 
-    // In Node.js environment, try to load config.json
+    // Try to load config in Node.js environment synchronously
     if (typeof module !== 'undefined' && module.exports) {
         try {
             const fs = require('fs');
@@ -20,8 +20,12 @@
             console.warn('Could not load config.json, using defaults');
         }
     }
+    // In browser environment, check for global config object
+    else if (typeof window !== 'undefined' && window.RetirementConfig) {
+        config = window.RetirementConfig;
+    }
 
-    // Fallback scenarios if config not loaded
+    // Default scenarios and configuration
     const defaultScenarios = {
         conservative: { return: 4.0, inflation: 2.0 },
         moderate: { return: 6.0, inflation: 2.5 },
@@ -29,6 +33,7 @@
         custom: { return: 5.5, inflation: 2.3 }
     };
 
+    // Use loaded config or fallback to defaults
     const scenarios = config.scenarios || defaultScenarios;
 
     // Main calculation function
@@ -113,32 +118,16 @@
         return { projections, depletionYear };
     }
 
-    // Function to load configuration from file (browser only)
-    async function loadConfig() {
-        // Only attempt to load in HTTP(S) environments, not file:// protocol
-        if (typeof window !== 'undefined' && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
-            try {
-                const response = await fetch('./config.json');
-                if (response.ok) {
-                    const loadedConfig = await response.json();
-                    Object.assign(config, loadedConfig);
-                    // Update scenarios with loaded config
-                    Object.assign(scenarios, loadedConfig.scenarios || {});
-                    return loadedConfig;
-                }
-            } catch (err) {
-                // Silently handle fetch errors for config file
-            }
-        }
-        return null;
+    // Simple function to get current configuration defaults
+    function getDefaults() {
+        return config.defaults || {};
     }
 
     // Export for different environments
     const RetirementCalculator = {
         calculateRetirement,
         scenarios,
-        loadConfig,
-        getDefaults: () => config.defaults || {}
+        getDefaults
     };
 
     // Node.js environment
