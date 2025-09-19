@@ -226,16 +226,9 @@ function createProjectionTable(projections) {
             <td>${projection.salary > 0 ? formatCurrency(projection.salary) : '-'}</td>
             <td>${projection.contributions > 0 ? formatCurrency(projection.contributions) : '-'}</td>
 
-            <!-- Account Withdrawals -->
-            <td>${withdrawals.taxable > 0 ? formatCurrency(withdrawals.taxable) : '-'}</td>
-            <td>${withdrawals.cash > 0 ? formatCurrency(withdrawals.cash) : '-'}</td>
-            <td>${withdrawals.traditional > 0 ? formatCurrency(withdrawals.traditional) : '-'}</td>
-            <td>${withdrawals.roth > 0 ? formatCurrency(withdrawals.roth) : '-'}</td>
-            <td>${withdrawals.hsa > 0 ? formatCurrency(withdrawals.hsa) : '-'}</td>
-
-            <td>${projection.withdrawal > 0 ? formatCurrency(projection.withdrawal) : '-'}</td>
-            <td>${projection.totalTaxes > 0 ? formatCurrency(projection.totalTaxes) : '-'}</td>
-            <td>${projection.netWithdrawn > 0 ? formatCurrency(projection.netWithdrawn) : '-'}</td>
+            <!-- Total Balance and Real Value First -->
+            <td>${formatCurrency(projection.endBalance)}</td>
+            <td>${formatCurrency(projection.endBalanceReal)}</td>
 
             <!-- Account Balances -->
             <td>${formatCurrency(accounts.taxable.balance)}</td>
@@ -244,8 +237,17 @@ function createProjectionTable(projections) {
             <td>${formatCurrency(accounts.roth.balance)}</td>
             <td>${formatCurrency(accounts.hsa.balance)}</td>
 
-            <td>${formatCurrency(projection.endBalance)}</td>
-            <td>${formatCurrency(projection.endBalanceReal)}</td>
+            <!-- Total Withdrawal and Taxes -->
+            <td>${projection.withdrawal > 0 ? formatCurrency(projection.withdrawal) : '-'}</td>
+            <td>${projection.totalTaxes > 0 ? formatCurrency(projection.totalTaxes) : '-'}</td>
+            <td>${projection.netWithdrawn > 0 ? formatCurrency(projection.netWithdrawn) : '-'}</td>
+
+            <!-- Account Withdrawals -->
+            <td>${withdrawals.taxable > 0 ? formatCurrency(withdrawals.taxable) : '-'}</td>
+            <td>${withdrawals.cash > 0 ? formatCurrency(withdrawals.cash) : '-'}</td>
+            <td>${withdrawals.traditional > 0 ? formatCurrency(withdrawals.traditional) : '-'}</td>
+            <td>${withdrawals.roth > 0 ? formatCurrency(withdrawals.roth) : '-'}</td>
+            <td>${withdrawals.hsa > 0 ? formatCurrency(withdrawals.hsa) : '-'}</td>
         `;
 
         tableBody.appendChild(row);

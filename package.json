@@ -5,8 +5,9 @@
   "main": "retirement_simulator.html",
   "scripts": {
     "test": "node test_calculator.js",
+    "test:accounts": "node test_accounts.js",
     "test:e2e": "node test_e2e.js",
-    "test:all": "npm run test && npm run test:e2e"
+    "test:all": "npm run test && npm run test:accounts && npm run test:e2e"
   },
   "devDependencies": {
     "puppeteer": "^21.0.0"
