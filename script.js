@@ -47,19 +47,22 @@ function calculateRetirement() {
         baseSalary: parseFloat(document.getElementById('baseSalary').value),
         bonus: parseFloat(document.getElementById('bonus').value),
         salaryGrowth: parseFloat(document.getElementById('salaryGrowth').value) / 100,
-        startingBalance:
-            parseFloat(document.getElementById('taxableBalance').value) +
-            parseFloat(document.getElementById('traditional401k').value) +
-            parseFloat(document.getElementById('rothBalance').value) +
-            parseFloat(document.getElementById('hsaBalance').value) +
-            parseFloat(document.getElementById('cashBalance').value),
-        annualContributions:
-            parseFloat(document.getElementById('taxableContrib').value) +
-            parseFloat(document.getElementById('employee401k').value) +
-            parseFloat(document.getElementById('employer401k').value) +
-            parseFloat(document.getElementById('rothContrib').value) +
-            parseFloat(document.getElementById('hsaEmployee').value) +
-            parseFloat(document.getElementById('hsaEmployer').value),
+
+        // Individual account balances
+        taxableBalance: document.getElementById('taxableBalance').value,
+        traditional401k: document.getElementById('traditional401k').value,
+        rothBalance: document.getElementById('rothBalance').value,
+        hsaBalance: document.getElementById('hsaBalance').value,
+        cashBalance: document.getElementById('cashBalance').value,
+
+        // Individual contributions
+        taxableContrib: document.getElementById('taxableContrib').value,
+        employee401k: document.getElementById('employee401k').value,
+        employer401k: document.getElementById('employer401k').value,
+        rothContrib: document.getElementById('rothContrib').value,
+        hsaEmployee: document.getElementById('hsaEmployee').value,
+        hsaEmployer: document.getElementById('hsaEmployer').value,
+
         investmentReturn: parseFloat(document.getElementById('investmentReturn').value) / 100,
         inflation: parseFloat(document.getElementById('inflation').value) / 100,
         baseWithdrawal: parseFloat(document.getElementById('baseWithdrawal').value),

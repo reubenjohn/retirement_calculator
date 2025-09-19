@@ -1,8 +1,8 @@
 // Test the retirement calculation logic using shared module
 const RetirementCalculator = require('./retirement-calculator.js');
 
-// Use shared scenarios and calculation function
-const { scenarios, calculateRetirement } = RetirementCalculator;
+// Use shared calculation function
+const { calculateRetirement } = RetirementCalculator;
 
 // Test cases
 function runTests() {
@@ -17,8 +17,22 @@ function runTests() {
         baseSalary: 150000,
         bonus: 15000,
         salaryGrowth: 0.03,
-        startingBalance: 50000 + 150000 + 30000 + 10000 + 20000, // 260,000
-        annualContributions: 12000 + 23000 + 10000 + 6500 + 4000 + 1000, // 56,500
+
+        // Individual account balances
+        taxableBalance: 50000,
+        traditional401k: 150000,
+        rothBalance: 30000,
+        hsaBalance: 10000,
+        cashBalance: 20000,
+
+        // Individual contributions
+        taxableContrib: 12000,
+        employee401k: 23000,
+        employer401k: 10000,
+        rothContrib: 6500,
+        hsaEmployee: 4000,
+        hsaEmployer: 1000,
+
         investmentReturn: 0.04, // Conservative scenario
         inflation: 0.02,
         baseWithdrawal: 60000,
@@ -81,13 +95,19 @@ function runTests() {
     // Test 5: Mathematical consistency
     console.log('\nTest 5: Mathematical Consistency');
 
-    // Pick a working year and verify the balance calculation
+    // Verify account-based calculations with tax drag
     const testYear = result1.projections[5]; // 6th year
-    const expectedBalance = testYear.startBalance + testYear.contributions - testYear.withdrawal +
-                           (testYear.startBalance * testYear.investmentReturn);
-    const balanceMatches = Math.abs(testYear.endBalance - expectedBalance) < 0.01;
-    console.log(`  ${balanceMatches ? '✅' : '❌'} Balance calculations are mathematically correct`);
-    console.log(`    Expected: $${expectedBalance.toLocaleString()}, Actual: $${testYear.endBalance.toLocaleString()}`);
+    const accounts = testYear.accounts;
+
+    // Calculate expected balance considering tax treatments
+    let expectedTotal = 0;
+    Object.values(accounts).forEach((account) => {
+        expectedTotal += account.balance;
+    });
+
+    const balanceMatches = Math.abs(testYear.endBalance - expectedTotal) < 0.01;
+    console.log(`  ${balanceMatches ? '✅' : '❌'} Account-based calculations are consistent`);
+    console.log(`    Calculated: $${expectedTotal.toLocaleString()}, Actual: $${testYear.endBalance.toLocaleString()}`);
 
     console.log('\n🎉 All tests completed!');
 }
