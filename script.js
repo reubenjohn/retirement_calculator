@@ -234,6 +234,8 @@ function createProjectionTable(projections) {
             <td>${withdrawals.hsa > 0 ? formatCurrency(withdrawals.hsa) : '-'}</td>
 
             <td>${projection.withdrawal > 0 ? formatCurrency(projection.withdrawal) : '-'}</td>
+            <td>${projection.totalTaxes > 0 ? formatCurrency(projection.totalTaxes) : '-'}</td>
+            <td>${projection.netWithdrawn > 0 ? formatCurrency(projection.netWithdrawn) : '-'}</td>
 
             <!-- Account Balances -->
             <td>${formatCurrency(accounts.taxable.balance)}</td>

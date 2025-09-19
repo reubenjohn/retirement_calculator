@@ -58,8 +58,9 @@
         return Object.values(accounts).reduce((sum, account) => sum + account.contributions, 0);
     }
 
-    function executeWithdrawalStrategy(targetAmount, accounts) {
+    function executeWithdrawalStrategy(targetAmount, accounts, taxSettings) {
         const withdrawals = { taxable: 0, traditional: 0, roth: 0, hsa: 0, cash: 0 };
+        const taxes = { taxable: 0, traditional: 0, roth: 0, hsa: 0, cash: 0 };
         let remaining = targetAmount;
 
         // TODO: Add RMD calculations for Traditional accounts starting at age 73
@@ -68,20 +69,35 @@
 
         // Strategy: Taxable → Traditional → Roth
         // 1. Taxable accounts first (including cash, capital gains rates)
-        remaining -= withdrawFromAccount('taxable', remaining, accounts, withdrawals);
-        remaining -= withdrawFromAccount('cash', remaining, accounts, withdrawals);
+        remaining -= withdrawFromAccount('taxable', remaining, accounts, withdrawals, taxSettings);
+        remaining -= withdrawFromAccount('cash', remaining, accounts, withdrawals, taxSettings);
 
         // 2. Traditional accounts (ordinary income rates)
-        remaining -= withdrawFromAccount('traditional', remaining, accounts, withdrawals);
+        remaining -= withdrawFromAccount('traditional', remaining, accounts, withdrawals, taxSettings);
 
         // 3. Roth accounts last (tax-free, preserve growth)
-        remaining -= withdrawFromAccount('roth', remaining, accounts, withdrawals);
-        remaining -= withdrawFromAccount('hsa', remaining, accounts, withdrawals);
+        remaining -= withdrawFromAccount('roth', remaining, accounts, withdrawals, taxSettings);
+        remaining -= withdrawFromAccount('hsa', remaining, accounts, withdrawals, taxSettings);
 
-        return { withdrawals, totalWithdrawn: targetAmount - remaining };
+        // Calculate taxes owed on withdrawals
+        Object.keys(withdrawals).forEach(accountType => {
+            if (withdrawals[accountType] > 0) {
+                taxes[accountType] = calculateTaxOnWithdrawal(accountType, withdrawals[accountType], taxSettings);
+            }
+        });
+
+        const totalTaxes = Object.values(taxes).reduce((sum, tax) => sum + tax, 0);
+
+        return {
+            withdrawals,
+            taxes,
+            totalWithdrawn: targetAmount - remaining,
+            totalTaxes,
+            netWithdrawn: (targetAmount - remaining) - totalTaxes
+        };
     }
 
-    function withdrawFromAccount(accountType, amount, accounts, withdrawals) {
+    function withdrawFromAccount(accountType, amount, accounts, withdrawals, taxSettings) {
         const available = accounts[accountType].balance;
         const toWithdraw = Math.min(amount, available);
 
@@ -91,6 +107,22 @@
         }
 
         return toWithdraw;
+    }
+
+    function calculateTaxOnWithdrawal(accountType, withdrawalAmount, taxSettings) {
+        let taxOwed = 0;
+
+        if (accountType === 'taxable' || accountType === 'cash') {
+            // Capital gains tax on the gains portion only
+            const gainsAmount = withdrawalAmount * taxSettings.taxableGainsRatio;
+            taxOwed = gainsAmount * taxSettings.capitalGainsRate;
+        } else if (accountType === 'traditional') {
+            // Ordinary income tax on full withdrawal amount
+            taxOwed = withdrawalAmount * taxSettings.ordinaryIncomeRate;
+        }
+        // Roth and HSA withdrawals are tax-free (taxOwed remains 0)
+
+        return taxOwed;
     }
 
     function growAccounts(accounts, investmentReturn, isWorking, taxSettings) {
@@ -163,10 +195,10 @@
             const startBalance = getTotalBalance(accounts);
 
             // Calculate withdrawal using new strategy
-            let withdrawalResult = { withdrawals: {}, totalWithdrawn: 0 };
+            let withdrawalResult = { withdrawals: {}, totalWithdrawn: 0, totalTaxes: 0, netWithdrawn: 0 };
             if (!isWorking) {
                 const targetWithdrawal = indexWithdrawals ? baseWithdrawal * priceIndex : baseWithdrawal;
-                withdrawalResult = executeWithdrawalStrategy(targetWithdrawal, accounts);
+                withdrawalResult = executeWithdrawalStrategy(targetWithdrawal, accounts, effectiveTaxSettings);
             }
 
             // Apply investment growth and contributions
@@ -192,6 +224,9 @@
                 priceIndex,
                 withdrawal: withdrawalResult.totalWithdrawn,
                 withdrawals: withdrawalResult.withdrawals,
+                taxes: withdrawalResult.taxes || {},
+                totalTaxes: withdrawalResult.totalTaxes || 0,
+                netWithdrawn: withdrawalResult.netWithdrawn || 0,
                 investmentReturn: investmentReturn,
                 startBalance,
                 endBalance,
