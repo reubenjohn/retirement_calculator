@@ -233,20 +233,35 @@ input[type="number"]:focus, select:focus {
 #projectionTable th {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 12px 8px;
-    text-align: left;
+    padding: 8px 6px;
+    text-align: center;
     font-weight: 600;
-    font-size: 0.85em;
+    font-size: 0.75em;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Subheader styling for account columns */
+#projectionTable thead tr:nth-child(2) th {
+    font-size: 0.7em;
+    padding: 6px 4px;
+    background: linear-gradient(135deg, #553c9a 0%, #5a4fcf 100%);
 }
 
 #projectionTable td {
-    padding: 10px 8px;
+    padding: 8px 4px;
     border-bottom: 1px solid #e2e8f0;
     text-align: right;
     white-space: nowrap;
+    font-size: 0.85em;
+}
+
+/* Smaller font for account columns */
+#projectionTable td:nth-child(n+6):nth-child(-n+15) {
+    font-size: 0.75em;
+    padding: 6px 3px;
 }
 
 #projectionTable td:first-child,

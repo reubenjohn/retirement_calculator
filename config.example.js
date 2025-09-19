@@ -44,5 +44,11 @@ window.RetirementConfig = {
     inflation: 2.5,
     baseWithdrawal: 50000,
     indexWithdrawals: "yes"
+  },
+  taxSettings: {
+    taxDragRate: 0.15,           // 15% annual tax drag on taxable accounts during growth
+    capitalGainsRate: 0.15,      // Long-term capital gains tax rate
+    ordinaryIncomeRate: 0.22,    // Marginal tax rate for Traditional 401k withdrawals
+    taxableGainsRatio: 0.7       // Assume 70% of taxable balance is gains (30% cost basis)
   }
 };

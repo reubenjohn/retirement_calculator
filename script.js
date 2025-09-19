@@ -25,6 +25,7 @@ function setupAutoRecalculation() {
         'taxableBalance', 'traditional401k', 'rothBalance', 'hsaBalance', 'cashBalance',
         'taxableContrib', 'employee401k', 'employer401k', 'rothContrib', 'hsaEmployee', 'hsaEmployer',
         'investmentReturn', 'inflation',
+        'taxDragRate', 'capitalGainsRate', 'ordinaryIncomeRate', 'taxableGainsRatio',
         'baseWithdrawal', 'indexWithdrawals'
     ];
 
@@ -65,6 +66,13 @@ function calculateRetirement() {
 
         investmentReturn: parseFloat(document.getElementById('investmentReturn').value) / 100,
         inflation: parseFloat(document.getElementById('inflation').value) / 100,
+
+        // Tax settings
+        taxDragRate: parseFloat(document.getElementById('taxDragRate').value) / 100,
+        capitalGainsRate: parseFloat(document.getElementById('capitalGainsRate').value) / 100,
+        ordinaryIncomeRate: parseFloat(document.getElementById('ordinaryIncomeRate').value) / 100,
+        taxableGainsRatio: parseFloat(document.getElementById('taxableGainsRatio').value) / 100,
+
         baseWithdrawal: parseFloat(document.getElementById('baseWithdrawal').value),
         indexWithdrawals: document.getElementById('indexWithdrawals').value === 'yes'
     };
@@ -201,8 +209,15 @@ function createProjectionTable(projections) {
             statusClass = 'status-retired';
         }
 
-        // Calculate investment gain for display
-        const investmentGain = projection.startBalance * projection.investmentReturn;
+        // Get account withdrawals and balances
+        const withdrawals = projection.withdrawals || { taxable: 0, cash: 0, traditional: 0, roth: 0, hsa: 0 };
+        const accounts = projection.accounts || {
+            taxable: { balance: 0 },
+            cash: { balance: 0 },
+            traditional: { balance: 0 },
+            roth: { balance: 0 },
+            hsa: { balance: 0 }
+        };
 
         row.innerHTML = `
             <td>${projection.year}</td>
@@ -210,8 +225,23 @@ function createProjectionTable(projections) {
             <td class="${statusClass}">${status}</td>
             <td>${projection.salary > 0 ? formatCurrency(projection.salary) : '-'}</td>
             <td>${projection.contributions > 0 ? formatCurrency(projection.contributions) : '-'}</td>
+
+            <!-- Account Withdrawals -->
+            <td>${withdrawals.taxable > 0 ? formatCurrency(withdrawals.taxable) : '-'}</td>
+            <td>${withdrawals.cash > 0 ? formatCurrency(withdrawals.cash) : '-'}</td>
+            <td>${withdrawals.traditional > 0 ? formatCurrency(withdrawals.traditional) : '-'}</td>
+            <td>${withdrawals.roth > 0 ? formatCurrency(withdrawals.roth) : '-'}</td>
+            <td>${withdrawals.hsa > 0 ? formatCurrency(withdrawals.hsa) : '-'}</td>
+
             <td>${projection.withdrawal > 0 ? formatCurrency(projection.withdrawal) : '-'}</td>
-            <td>${formatCurrency(investmentGain)}</td>
+
+            <!-- Account Balances -->
+            <td>${formatCurrency(accounts.taxable.balance)}</td>
+            <td>${formatCurrency(accounts.cash.balance)}</td>
+            <td>${formatCurrency(accounts.traditional.balance)}</td>
+            <td>${formatCurrency(accounts.roth.balance)}</td>
+            <td>${formatCurrency(accounts.hsa.balance)}</td>
+
             <td>${formatCurrency(projection.endBalance)}</td>
             <td>${formatCurrency(projection.endBalanceReal)}</td>
         `;
@@ -264,6 +294,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 btn.classList.add('active');
             }
         });
+    }
+
+    // Apply tax settings from config
+    if (config.taxSettings) {
+        const taxSettings = config.taxSettings;
+        document.getElementById('taxDragRate').value = (taxSettings.taxDragRate * 100).toFixed(1);
+        document.getElementById('capitalGainsRate').value = (taxSettings.capitalGainsRate * 100).toFixed(1);
+        document.getElementById('ordinaryIncomeRate').value = (taxSettings.ordinaryIncomeRate * 100).toFixed(1);
+        document.getElementById('taxableGainsRatio').value = (taxSettings.taxableGainsRatio * 100).toFixed(0);
     }
 
     setupAutoRecalculation();

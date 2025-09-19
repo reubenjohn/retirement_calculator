@@ -10,8 +10,14 @@
         config = window.RetirementConfig;
     }
 
-    // Use scenarios from loaded config
+    // Use scenarios and tax settings from loaded config
     const scenarios = config.scenarios || {};
+    const taxSettings = config.taxSettings || {
+        taxDragRate: 0.15,
+        capitalGainsRate: 0.15,
+        ordinaryIncomeRate: 0.22,
+        taxableGainsRatio: 0.7
+    };
 
     // Account management functions
     function initializeAccounts(params) {
@@ -87,14 +93,14 @@
         return toWithdraw;
     }
 
-    function growAccounts(accounts, investmentReturn, isWorking) {
-        Object.entries(accounts).forEach(([type, account]) => {
+    function growAccounts(accounts, investmentReturn, isWorking, taxSettings) {
+        Object.values(accounts).forEach((account) => {
             // Apply different growth rates based on tax treatment
             let effectiveReturn = investmentReturn;
 
             // Apply tax drag to taxable accounts
             if (account.taxTreatment === 'taxable') {
-                effectiveReturn *= 0.85; // 15% tax drag
+                effectiveReturn *= (1 - taxSettings.taxDragRate);
             }
 
             // Growth
@@ -119,8 +125,20 @@
             investmentReturn,
             inflation,
             baseWithdrawal,
-            indexWithdrawals
+            indexWithdrawals,
+            taxDragRate,
+            capitalGainsRate,
+            ordinaryIncomeRate,
+            taxableGainsRatio
         } = params;
+
+        // Use tax settings from params or fall back to config defaults
+        const effectiveTaxSettings = {
+            taxDragRate: taxDragRate !== undefined ? taxDragRate : taxSettings.taxDragRate,
+            capitalGainsRate: capitalGainsRate !== undefined ? capitalGainsRate : taxSettings.capitalGainsRate,
+            ordinaryIncomeRate: ordinaryIncomeRate !== undefined ? ordinaryIncomeRate : taxSettings.ordinaryIncomeRate,
+            taxableGainsRatio: taxableGainsRatio !== undefined ? taxableGainsRatio : taxSettings.taxableGainsRatio
+        };
 
         const projections = [];
         const currentYear = new Date().getFullYear();
@@ -152,7 +170,7 @@
             }
 
             // Apply investment growth and contributions
-            growAccounts(accounts, investmentReturn, isWorking);
+            growAccounts(accounts, investmentReturn, isWorking, effectiveTaxSettings);
 
             // Get ending balances
             const endBalance = getTotalBalance(accounts);
