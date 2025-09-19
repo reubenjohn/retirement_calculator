@@ -4,8 +4,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Package lock files (keep package.json, ignore lock files)
-package-lock.json
+# Package lock files (keep package-lock.json for CI consistency)
 yarn.lock
 
 # Environment variables
