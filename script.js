@@ -5,7 +5,7 @@ const scenarios = RetirementCalculator.scenarios;
 
 // Initialize scenario buttons
 document.querySelectorAll('.scenario-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function () {
         document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
 
@@ -88,7 +88,7 @@ function displayResults(projections, retirementAge, lifeExpectancy, depletionYea
         const depletionProjection = projections.find(p => p.year === depletionYear);
         yearsSustainable = depletionProjection ? depletionProjection.age - retirementAge : 0;
     } else {
-        yearsSustainable = lifeExpectancy - retirementAge + 1;
+        yearsSustainable = lifeExpectancy;
     }
 
     // Update summary cards
@@ -146,7 +146,7 @@ function createChart(projections) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: function(value) {
+                        callback: function (value) {
                             return '$' + value.toLocaleString();
                         }
                     }
@@ -165,7 +165,7 @@ function createChart(projections) {
                 },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
                         }
                     }
@@ -237,7 +237,7 @@ function populateDefaults(defaults) {
 }
 
 // Initialize with default calculation and setup auto-recalculation
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Get defaults from the calculator module
     const defaults = RetirementCalculator.getDefaults();
     if (defaults && Object.keys(defaults).length > 0) {

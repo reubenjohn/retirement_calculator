@@ -64,4 +64,3 @@ build/
 
 # Configuration files with sensitive defaults
 config.js
-config.json
