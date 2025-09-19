@@ -130,6 +130,70 @@ function createChart(projections) {
     const balances = projections.map(p => p.endBalance);
     const realBalances = projections.map(p => p.endBalanceReal);
 
+    // Get retirement age and life expectancy for vertical lines
+    const retirementAge = parseInt(document.getElementById('retirementAge').value);
+    const lifeExpectancy = parseInt(document.getElementById('lifeExpectancy').value);
+
+    // Find the year corresponding to retirement age and life expectancy
+    const retirementProjection = projections.find(p => p.age === retirementAge);
+    const lifeExpectancyProjection = projections.find(p => p.age === lifeExpectancy);
+
+    // Vertical lines plugin
+    const verticalLinePlugin = {
+        id: 'verticalLines',
+        afterDraw: (chart) => {
+            const ctx = chart.ctx;
+            const chartArea = chart.chartArea;
+            const scales = chart.scales;
+
+            // Draw retirement age line
+            if (retirementProjection) {
+                // Find the index of this projection in the years array
+                const retirementIndex = years.indexOf(retirementProjection.year);
+                const retirementX = scales.x.getPixelForValue(retirementIndex);
+
+                ctx.save();
+                ctx.strokeStyle = 'rgba(255, 102, 0, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([8, 4]);
+                ctx.beginPath();
+                ctx.moveTo(retirementX, chartArea.top);
+                ctx.lineTo(retirementX, chartArea.bottom);
+                ctx.stroke();
+
+                // Add subtle label at top
+                ctx.fillStyle = 'rgba(255, 102, 0, 0.9)';
+                ctx.font = '11px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Retirement', retirementX, chartArea.top + 20);
+                ctx.restore();
+            }
+
+            // Draw life expectancy line
+            if (lifeExpectancyProjection) {
+                // Find the index of this projection in the years array
+                const lifeExpectancyIndex = years.indexOf(lifeExpectancyProjection.year);
+                const lifeExpectancyX = scales.x.getPixelForValue(lifeExpectancyIndex);
+
+                ctx.save();
+                ctx.strokeStyle = 'rgba(204, 0, 0, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([8, 4]);
+                ctx.beginPath();
+                ctx.moveTo(lifeExpectancyX, chartArea.top);
+                ctx.lineTo(lifeExpectancyX, chartArea.bottom);
+                ctx.stroke();
+
+                // Add subtle label at top
+                ctx.fillStyle = 'rgba(204, 0, 0, 0.9)';
+                ctx.font = '11px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Life Expectancy', lifeExpectancyX, chartArea.top + 20);
+                ctx.restore();
+            }
+        }
+    };
+
     window.portfolioChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -182,7 +246,8 @@ function createChart(projections) {
                     }
                 }
             }
-        }
+        },
+        plugins: [verticalLinePlugin]
     });
 }
 
