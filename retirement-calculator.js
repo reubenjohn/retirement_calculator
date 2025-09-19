@@ -4,13 +4,32 @@
 (function(global) {
     'use strict';
 
-    // Scenario presets
-    const scenarios = {
+    // Load configuration
+    let config = {};
+
+    // In Node.js environment, try to load config.json
+    if (typeof module !== 'undefined' && module.exports) {
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            const configPath = path.join(__dirname, 'config.json');
+            if (fs.existsSync(configPath)) {
+                config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            }
+        } catch (err) {
+            console.warn('Could not load config.json, using defaults');
+        }
+    }
+
+    // Fallback scenarios if config not loaded
+    const defaultScenarios = {
         conservative: { return: 4.0, inflation: 2.0 },
         moderate: { return: 6.0, inflation: 2.5 },
         aggressive: { return: 8.0, inflation: 3.0 },
         custom: { return: 5.5, inflation: 2.3 }
     };
+
+    const scenarios = config.scenarios || defaultScenarios;
 
     // Main calculation function
     function calculateRetirement(params) {
@@ -94,10 +113,32 @@
         return { projections, depletionYear };
     }
 
+    // Function to load configuration from file (browser only)
+    async function loadConfig() {
+        // Only attempt to load in HTTP(S) environments, not file:// protocol
+        if (typeof window !== 'undefined' && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
+            try {
+                const response = await fetch('./config.json');
+                if (response.ok) {
+                    const loadedConfig = await response.json();
+                    Object.assign(config, loadedConfig);
+                    // Update scenarios with loaded config
+                    Object.assign(scenarios, loadedConfig.scenarios || {});
+                    return loadedConfig;
+                }
+            } catch (err) {
+                // Silently handle fetch errors for config file
+            }
+        }
+        return null;
+    }
+
     // Export for different environments
     const RetirementCalculator = {
         calculateRetirement,
-        scenarios
+        scenarios,
+        loadConfig,
+        getDefaults: () => config.defaults || {}
     };
 
     // Node.js environment

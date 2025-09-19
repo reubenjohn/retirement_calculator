@@ -61,3 +61,6 @@ temp/
 # Build outputs (if any in future)
 dist/
 build/
+
+# Configuration files with sensitive defaults
+config.json

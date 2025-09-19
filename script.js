@@ -226,8 +226,24 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
+// Function to populate form with defaults
+function populateDefaults(defaults) {
+    Object.keys(defaults).forEach(key => {
+        const element = document.getElementById(key);
+        if (element && !element.value) {
+            element.value = defaults[key];
+        }
+    });
+}
+
 // Initialize with default calculation and setup auto-recalculation
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Try to load configuration first
+    const config = await RetirementCalculator.loadConfig();
+    if (config && config.defaults) {
+        populateDefaults(config.defaults);
+    }
+
     setupAutoRecalculation();
     calculateRetirement();
 });
