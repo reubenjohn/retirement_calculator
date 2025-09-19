@@ -244,11 +244,23 @@ document.addEventListener('DOMContentLoaded', function () {
         populateDefaults(defaults);
     }
 
-    // Apply default scenario if available
-    const defaultScenario = scenarios.default;
+    // Apply configured default scenario
+    const config = (typeof window !== 'undefined' && window.RetirementConfig) ? window.RetirementConfig : {};
+    const defaultScenarioName = config.defaultScenario || "moderate";
+    const defaultScenario = scenarios[defaultScenarioName];
+
     if (defaultScenario) {
+        // Apply scenario values
         document.getElementById('investmentReturn').value = defaultScenario.return;
         document.getElementById('inflation').value = defaultScenario.inflation;
+
+        // Set the corresponding button as active
+        document.querySelectorAll('.scenario-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.scenario === defaultScenarioName) {
+                btn.classList.add('active');
+            }
+        });
     }
 
     setupAutoRecalculation();

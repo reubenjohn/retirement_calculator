@@ -4,10 +4,6 @@
 
 window.RetirementConfig = {
   scenarios: {
-    default: {
-      return: 6.0,
-      inflation: 2.5
-    },
     conservative: {
       return: 4.0,
       inflation: 2.0
@@ -25,6 +21,7 @@ window.RetirementConfig = {
       inflation: 2.3
     }
   },
+  defaultScenario: "moderate",
   defaults: {
     currentAge: 30,
     retirementAge: 65,
