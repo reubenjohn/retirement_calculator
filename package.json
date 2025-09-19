@@ -2,7 +2,7 @@
   "name": "retirement-calculator",
   "version": "1.0.0",
   "description": "A retirement planning calculator with browser-based interface and testing",
-  "main": "retirement_simulator.html",
+  "main": "index.html",
   "scripts": {
     "test:calculator": "jest calculator.test.js",
     "test:accounts": "jest accounts.test.js",

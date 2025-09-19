@@ -33,7 +33,7 @@ A comprehensive, tax-aware retirement planning simulator with interactive web in
 
 ### **Local Usage (No Server Required)**
 1. **Download/Clone** the repository
-2. **Open** `retirement_simulator.html` directly in your web browser
+2. **Open** `index.html` directly in your web browser
 3. **Configure** your financial parameters in the web interface
 4. **Analyze** the detailed projections and tax implications
 
@@ -85,7 +85,7 @@ Most retirement calculators ignore taxes entirely. This simulator:
 ### **File Structure**
 ```
 retirement_calculator/
-├── retirement_simulator.html    # Main web interface
+├── index.html    # Main web interface
 ├── accounts.js                  # Account management module
 ├── retirement-calculator.js     # Core calculation engine
 ├── script.js                   # UI interaction logic

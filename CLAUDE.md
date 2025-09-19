@@ -13,7 +13,7 @@ retirement_calculator/
 │
 ├── accounts.js                    # 🏦 Account management module (NEW!)
 ├── retirement-calculator.js       # 🧠 Core calculation orchestration
-├── retirement_simulator.html      # 🌐 Main web interface with tax settings
+├── index.html      # 🌐 Main web interface with tax settings
 ├── styles.css                     # 🎨 Complete styling including table layouts
 ├── script.js                      # ⚡ Frontend logic and table rendering
 │
@@ -152,7 +152,7 @@ npm run test:all      # Complete test suite
 # Development workflow
 # 1. Modify code
 # 2. Run appropriate tests
-# 3. Open retirement_simulator.html in browser to validate UI
+# 3. Open index.html in browser to validate UI
 # 4. Run npm run test:all before committing
 ```
 
@@ -180,7 +180,7 @@ npm run test:all      # Complete test suite
 ## 🎯 Usage Notes & Context
 
 ### **For Local Development/Usage**
-- **No server required**: Open `retirement_simulator.html` directly in any browser
+- **No server required**: Open `index.html` directly in any browser
 - **Self-contained**: All dependencies loaded via CDN (Chart.js)
 - **Privacy-first**: Sensitive config stored locally and git-ignored
 - **Instant updates**: Real-time recalculation as parameters change

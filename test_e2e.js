@@ -46,7 +46,7 @@ async function runE2ETests() {
         });
 
         // Load the HTML file directly (this preserves relative script paths)
-        const htmlPath = path.resolve(__dirname, 'retirement_simulator.html');
+        const htmlPath = path.resolve(__dirname, 'index.html');
         await page.goto(`file://${htmlPath}`);
 
         // Wait for page to load completely
@@ -192,7 +192,7 @@ async function runE2ETests() {
 
         // If puppeteer fails, provide alternative manual test instructions
         console.log('\n📋 Alternative Manual Test Instructions:');
-        console.log('1. Open retirement_simulator.html in a web browser');
+        console.log('1. Open index.html in a web browser');
         console.log('2. Verify default values are loaded in all form fields');
         console.log('3. Click different scenario buttons and check if values update');
         console.log('4. Change some input values and verify automatic recalculation');
@@ -223,7 +223,7 @@ async function checkPuppeteer() {
 function runSimplifiedValidation() {
     console.log('🔍 Running Simplified HTML Validation\n');
 
-    const htmlPath = path.resolve(__dirname, 'retirement_simulator.html');
+    const htmlPath = path.resolve(__dirname, 'index.html');
     const htmlContent = fs.readFileSync(htmlPath, 'utf8');
 
     // Check for required elements
@@ -234,7 +234,7 @@ function runSimplifiedValidation() {
 
     const allElementsPresent = requiredElements.every(selector => {
         const present = htmlContent.includes(`id="${selector.substring(1)}"`) ||
-                       htmlContent.includes(`class="${selector.substring(1)}"`);
+            htmlContent.includes(`class="${selector.substring(1)}"`);
         console.log(`  ${present ? '✅' : '❌'} ${selector} element exists`);
         return present;
     });
