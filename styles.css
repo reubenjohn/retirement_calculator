@@ -41,10 +41,44 @@ body {
 }
 
 .main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.sidebar {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
-    margin-bottom: 30px;
+}
+
+.main-area {
+    width: 100%;
+}
+
+/* Desktop layout */
+@media (min-width: 1024px) {
+    .main-content {
+        display: flex;
+        flex-direction: row;
+        gap: 40px;
+    }
+
+    .sidebar {
+        width: 400px;
+        flex-shrink: 0;
+        display: block;
+    }
+
+    .sidebar .panel {
+        margin-bottom: 20px;
+    }
+
+    .main-area {
+        flex: 1;
+        min-width: 0;
+    }
 }
 
 .panel {
@@ -76,8 +110,6 @@ body {
 .panel-header:hover {
     background-color: #f8fafc;
     border-radius: 6px;
-    padding: 10px;
-    margin: -10px;
 }
 
 .panel-toggle {
